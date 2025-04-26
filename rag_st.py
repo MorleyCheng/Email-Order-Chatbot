@@ -1,5 +1,8 @@
 """RAG 聊天機器人主程式"""
 import os
+import sys
+import pysqlite3
+sys.modules["sqlite3"] = pysqlite3
 import pandas as pd
 import streamlit as st
 from langchain.schema import Document
@@ -13,6 +16,7 @@ from dotenv import load_dotenv
 import openai
 from pathlib import Path
 from typing import Dict, Any
+from openai import OpenAI, AuthenticationError, RateLimitError, APIConnectionError
 
 def init_session_state():
     """初始化 session state"""
@@ -26,20 +30,31 @@ def init_session_state():
 def validate_api_key(api_key: str) -> bool:
     """驗證 OpenAI API Key"""
     try:
-        client = openai.OpenAI(api_key=api_key)
-        models = client.models.list()
-        model_list = list(models)
-        if len(model_list) > 0:
+        # 建立 OpenAI 客戶端，移除代理設定
+        client = OpenAI(
+            api_key=api_key,
+            timeout=10.0  # 設定超時時間
+        )
+        
+        # 測試呼叫 chat.completions API
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "system", "content": "ping"}],
+            max_tokens=5  # 限制回應長度以加快驗證速度
+        )
+        
+        if response:
             st.success("✅ API Key 驗證成功！")
             return True
-    except:  # 不指定具體異常類型，避免顯示詳細錯誤
-        st.error("❌ API Key 驗證失敗")
-        st.info("""
-        請確認：
-        1. API Key 格式是否正確
-        2. 帳戶是否有足夠額度
-        3. API Key 是否仍然有效
-        """)
+    except AuthenticationError:
+        st.error("❌ API Key 驗證失敗：認證錯誤，請檢查 API Key 是否正確")
+    except RateLimitError:
+        st.error("❌ API Key 驗證失敗：已超過使用限制，請檢查帳戶額度")
+    except APIConnectionError:
+        st.error("❌ API Key 驗證失敗：無法連接到 OpenAI API，請檢查網路連線")
+    except Exception as e:
+        st.error(f"❌ API Key 驗證失敗")
+        #st.error(f"❌ API Key 驗證失敗：{str(e)}")  #for debugging purposes
     return False
 
 # 基本設定
@@ -338,6 +353,8 @@ def get_openai_api_key():
         if not api_key.startswith('sk-'):
             st.error("API Key 格式不正確，應該以 'sk-' 開頭")
             st.stop()
+        
+        #st.info(f"正在使用的 API Key: {api_key[:-1]}***")
                    
         return api_key
 
@@ -382,8 +399,8 @@ def main():
             bottom: 0 !重要;
             background-color: white !重要;
             border-top: 1px solid #ddd !important;
-            z-index: 99999 !important;
-            padding: 1rem !important;
+            z-index: 99999 !重要;
+            padding: 1rem !重要;
             left: 15.625rem !重要;  /* 250px，配合側邊欄寬度 */
             right: 0 !重要;
         }
