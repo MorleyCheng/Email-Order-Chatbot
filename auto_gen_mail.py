@@ -4,39 +4,51 @@ import random
 from datetime import datetime, timedelta
 import uuid
 
-# Define products for Alex and Ben
+# Define products for Alex, Ben and Amy
 alex_products = [
-    {"name": "Wireless Keyboard", "quantity": 50, "remarks": "Black, with batteries"},
-    {"name": "Wireless Mouse", "quantity": 30, "remarks": "Black, with batteries"},
-    {"name": "USB-C Hub", "quantity": 20, "remarks": "4 ports"},
-    {"name": "Monitor Stand", "quantity": 15, "remarks": "Adjustable height"},
-    {"name": "Webcam", "quantity": 25, "remarks": "1080p"},
-    {"name": "Laptop Cooler", "quantity": 10, "remarks": "RGB lighting"},
-    {"name": "External SSD", "quantity": 40, "remarks": "1TB"},
-    {"name": "HDMI Cable", "quantity": 60, "remarks": "2m"},
-    {"name": "Desk Lamp", "quantity": 12, "remarks": "LED, dimmable"},
-    {"name": "Ergonomic Chair", "quantity": 8, "remarks": "Mesh back"}
+    {"name": "幻糖", "quantity": 50, "remarks": "七彩繽紛口感"},
+    {"name": "甜蜜爆彈", "quantity": 30, "remarks": "爆炸酸甜口感"},
+    {"name": "彩虹奇緣", "quantity": 20, "remarks": "多層次水果味"},
+    {"name": "嘻哈跳跳糖", "quantity": 15, "remarks": "嘴裡會跳舞"},
+    {"name": "月光巧克力球", "quantity": 25, "remarks": "濃郁牛奶巧克力"},
+    {"name": "糖雲", "quantity": 10, "remarks": "入口即化"},
+    {"name": "魔法能量糖", "quantity": 40, "remarks": "提升專注力"},
+    {"name": "莓果派對棒棒糖", "quantity": 60, "remarks": "綜合莓果風味"},
+    {"name": "驢子軟糖", "quantity": 12, "remarks": "Q彈有嚼勁"},
+    {"name": "甜光迷蹤", "quantity": 8, "remarks": "會發光的糖果"}
 ]
+
 ben_products = [
-    {"name": "LED Monitor", "quantity": 20, "remarks": "27-inch, 4K"},
-    {"name": "Graphics Card", "quantity": 10, "remarks": "8GB VRAM"},
-    {"name": "Mechanical Keyboard", "quantity": 15, "remarks": "RGB, mechanical"},
-    {"name": "Gaming Mouse", "quantity": 25, "remarks": "Programmable buttons"},
-    {"name": "Soundbar", "quantity": 12, "remarks": "Bluetooth"},
-    {"name": "Network Router", "quantity": 18, "remarks": "Wi-Fi 6"},
-    {"name": "Smart Speaker", "quantity": 30, "remarks": "Voice assistant"},
-    {"name": "Power Strip", "quantity": 50, "remarks": "6 outlets"},
-    {"name": "USB Charger", "quantity": 40, "remarks": "Fast charging"},
-    {"name": "Cooling Fan", "quantity": 22, "remarks": "120mm"}
+    {"name": "幻糖", "quantity": 20, "remarks": "七彩繽紛口感"},
+    {"name": "甜蜜爆彈", "quantity": 10, "remarks": "爆炸酸甜口感"},
+    {"name": "彩虹奇緣", "quantity": 15, "remarks": "多層次水果味"},
+    {"name": "嘻哈跳跳糖", "quantity": 25, "remarks": "嘴裡會跳舞"},
+    {"name": "月光巧克力球", "quantity": 12, "remarks": "濃郁牛奶巧克力"},
+    {"name": "糖雲", "quantity": 18, "remarks": "入口即化"},
+    {"name": "魔法能量糖", "quantity": 30, "remarks": "提升專注力"},
+    {"name": "莓果派對棒棒糖", "quantity": 50, "remarks": "綜合莓果風味"},
+    {"name": "驢子軟糖", "quantity": 40, "remarks": "Q彈有嚼勁"},
+    {"name": "甜光迷蹤", "quantity": 22, "remarks": "會發光的糖果"}
+]
+
+amy_products = [
+    {"name": "幻糖", "quantity": 35, "remarks": "七彩繽紛口感"},
+    {"name": "甜蜜爆彈", "quantity": 25, "remarks": "爆炸酸甜口感"},
+    {"name": "彩虹奇緣", "quantity": 30, "remarks": "多層次水果味"},
+    {"name": "嘻哈跳跳糖", "quantity": 20, "remarks": "嘴裡會跳舞"},
+    {"name": "月光巧克力球", "quantity": 15, "remarks": "濃郁牛奶巧克力"},
+    {"name": "糖雲", "quantity": 25, "remarks": "入口即化"},
+    {"name": "魔法能量糖", "quantity": 45, "remarks": "提升專注力"},
+    {"name": "莓果派對棒棒糖", "quantity": 55, "remarks": "綜合莓果風味"},
+    {"name": "驢子軟糖", "quantity": 30, "remarks": "Q彈有嚼勁"},
+    {"name": "甜光迷蹤", "quantity": 15, "remarks": "會發光的糖果"}
 ]
 
 # Pricing for products (for vendor replies)
 pricing = {
-    "Wireless Keyboard": 40, "Wireless Mouse": 15, "USB-C Hub": 25, "Monitor Stand": 30,
-    "Webcam": 50, "Laptop Cooler": 20, "External SSD": 100, "HDMI Cable": 10,
-    "Desk Lamp": 35, "Ergonomic Chair": 150, "LED Monitor": 300, "Graphics Card": 400,
-    "Mechanical Keyboard": 80, "Gaming Mouse": 45, "Soundbar": 60, "Network Router": 90,
-    "Smart Speaker": 50, "Power Strip": 15, "USB Charger": 20, "Cooling Fan": 12
+    "幻糖": 40, "甜蜜爆彈": 15, "彩虹奇緣": 25, "嘻哈跳跳糖": 30,
+    "月光巧克力球": 50, "糖雲": 20, "魔法能量糖": 100, "莓果派對棒棒糖": 10,
+    "驢子軟糖": 35, "甜光迷蹤": 150
 }
 
 # Generate random dates between April 22, 2025, and April 30, 2025
@@ -86,7 +98,12 @@ def format_markdown_table(columns, rows):
 
 # Function to generate customer email
 def generate_customer_email(customer, product, date):
-    sender = "Alex@aaa.com" if customer == "Alex" else "Ben@bbb.com"
+    if customer == "Alex":
+        sender = "Alex@aaa.com"
+    elif customer == "Ben":
+        sender = "Ben@bbb.com"
+    else:  # Amy
+        sender = "Amy@ccc.com"
     subject = f"{date.strftime('%Y-%m-%d')} [採購需求] {product['name']}"
     table_data = {
         "columns": ["產品名稱", "數量", "備註"],
@@ -114,7 +131,7 @@ Best regards,
         "tables_json": json.dumps(table_data, ensure_ascii=False)
     }
 
-# Function to generate vendor reply
+# 修改 generate_vendor_reply 函數中的表格欄位和回覆內容
 def generate_vendor_reply(customer_email, product, date):
     product_name = product['name']
     quantity = product['quantity']
@@ -123,17 +140,24 @@ def generate_vendor_reply(customer_email, product, date):
     order_number = f"PO-{date.strftime('%Y%m%d')}-{random.randint(100, 999)}"
     delivery_date = (date + timedelta(days=random.randint(5, 10))).strftime('%Y-%m-%d')
     table_data = {
-        "columns": ["產品名稱", "數量", "單價 (USD)", "小計 (USD)"],
+        "columns": ["產品名稱", "數量", "單價 (TWD)", "小計 (TWD)"],
         "rows": [[product_name, quantity, unit_price, subtotal]]
     }
     formatted_table = format_markdown_table(table_data["columns"], table_data["rows"])
     
-    body = f"""Hi {'Alex' if customer_email['sender'] == 'Alex@aaa.com' else 'Ben'},
+    if customer_email['sender'] == 'Alex@aaa.com':
+        customer_name = 'Alex'
+    elif customer_email['sender'] == 'Ben@bbb.com':
+        customer_name = 'Ben'
+    else:
+        customer_name = 'Amy'
+    
+    body = f"""Hi {customer_name},
 
 感謝您的採購需求。以下是訂單詳情：
 
 **訂單單號**：{order_number}
-**總金額**：USD {subtotal}
+**總金額**：TWD {subtotal}
 **預計交期**：{delivery_date}
 
 {formatted_table}
@@ -161,13 +185,17 @@ for i in range(10):
     # Alex's email
     alex_email = generate_customer_email("Alex", alex_products[i], date)
     emails.append(alex_email)
-    # Vendor reply to Alex
     emails.append(generate_vendor_reply(alex_email, alex_products[i], date))
+    
     # Ben's email
     ben_email = generate_customer_email("Ben", ben_products[i], date)
     emails.append(ben_email)
-    # Vendor reply to Ben
     emails.append(generate_vendor_reply(ben_email, ben_products[i], date))
+    
+    # Amy's email
+    amy_email = generate_customer_email("Amy", amy_products[i], date)
+    emails.append(amy_email)
+    emails.append(generate_vendor_reply(amy_email, amy_products[i], date))
 
 # 在 df.to_excel 之前加入以下程式碼
 # 輸出郵件內容到 txt 檔案
@@ -189,5 +217,54 @@ df = pd.DataFrame(emails)
 # Export to Excel
 df.to_excel("email_data.xlsx", index=False, engine='openpyxl')
 
+# 在最後一個 print 語句之前加入以下程式碼
+# 準備驗證用的 DataFrame
+verify_data = []
+for email in emails:
+    data = {
+        "received_time": email["received_time"],
+        "subject": email["subject"],
+        "sender": email["sender"],
+        "to": email["to"],
+        "body": email["body"],
+        "replay_times": email["replay_times"]
+    }
+    
+    # 從 tables_json 中提取產品相關資訊
+    table_data = json.loads(email["tables_json"])
+    if len(table_data["columns"]) == 3:  # 客戶詢價郵件
+        data.update({
+            "產品名稱": table_data["rows"][0][0],
+            "數量": table_data["rows"][0][1],
+            "備註": table_data["rows"][0][2],
+            "單價": None,
+            "小計": None
+        })
+    else:  # 廠商回覆郵件
+        data.update({
+            "產品名稱": table_data["rows"][0][0],
+            "數量": table_data["rows"][0][1],
+            "單價": table_data["rows"][0][2],
+            "小計": table_data["rows"][0][3],
+            "備註": None
+        })
+    
+    verify_data.append(data)
+
+# 創建驗證用的 DataFrame
+df_verify = pd.DataFrame(verify_data)
+
+# 調整欄位順序
+columns_order = [
+    "received_time", "subject", "sender", "to", 
+    "產品名稱", "數量", "單價", "小計", "備註",
+    "body", "replay_times"
+]
+df_verify = df_verify[columns_order]
+
+# 輸出到 Excel
+df_verify.to_excel("email_data_verify.xlsx", index=False, engine='openpyxl')
+
 print("Excel file 'email_data.xlsx' has been generated with 40 email records.")
 print("Text file 'email_content.txt' has been generated with formatted email content.")
+print("Verification Excel file 'email_data_verify.xlsx' has been generated with detailed product information.")
