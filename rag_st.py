@@ -354,7 +354,43 @@ def get_openai_api_key():
             st.error("API Key 格式不正確，應該以 'sk-' 開頭")
             st.stop()
         
-        #st.info(f"正在使用的 API Key: {api_key[:-1]}***")
+        # 檢查 API key 是否變更
+        if 'previous_api_key' not in st.session_state or st.session_state.previous_api_key != api_key:
+            # 更新環境變數
+            os.environ["OPENAI_API_KEY"] = api_key
+            
+            # 如果有 .env 檔案，也更新它
+            env_path = Path(__file__).parent / '.env'
+            try:
+                if env_path.exists():
+                    with open(env_path, 'r', encoding='utf-8') as f:
+                        lines = f.readlines()
+                    
+                    # 尋找並更新 OPENAI_API_KEY
+                    key_updated = False
+                    for i, line in enumerate(lines):
+                        if line.startswith('OPENAI_API_KEY='):
+                            lines[i] = f'OPENAI_API_KEY={api_key}\n'
+                            key_updated = True
+                            break
+                    
+                    # 如果沒有找到key，就新增一行
+                    if not key_updated:
+                        lines.append(f'OPENAI_API_KEY={api_key}\n')
+                    
+                    # 寫回檔案
+                    with open(env_path, 'w', encoding='utf-8') as f:
+                        f.writelines(lines)
+                else:
+                    # 如果 .env 檔案不存在，建立新檔案
+                    with open(env_path, 'w', encoding='utf-8') as f:
+                        f.write(f'OPENAI_API_KEY={api_key}\n')
+            except Exception as e:
+                st.warning(f"無法更新 .env 檔案：{str(e)}")
+            
+            st.session_state.previous_api_key = api_key
+            st.session_state.need_reinit = True  # 觸發重新初始化
+            st.rerun()  # 重新運行應用
                    
         return api_key
 
